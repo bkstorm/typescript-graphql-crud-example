@@ -5,6 +5,7 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloWorldResolver } from "./resolvers/HelloWorldResolver";
 import { MovieResolver } from "./resolvers/MovieResolver";
+import responseCachePlugin from "apollo-server-plugin-response-cache";
 
 (async () => {
   const app = express();
@@ -15,7 +16,8 @@ import { MovieResolver } from "./resolvers/MovieResolver";
     schema: await buildSchema({
       resolvers: [HelloWorldResolver, MovieResolver]
     }),
-    context: ({ req, res }) => ({ req, res })
+    context: ({ req, res }) => ({ req, res }),
+    plugins: [(responseCachePlugin as any)()]
   });
 
   apolloServer.applyMiddleware({ app, cors: false });

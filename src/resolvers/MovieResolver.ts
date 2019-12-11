@@ -5,9 +5,11 @@ import {
   Int,
   Query,
   InputType,
-  Field
+  Field,
+  Info
 } from "type-graphql";
 import { Movie } from "../entity/Movie";
+import { GraphQLResolveInfo } from "graphql";
 
 @InputType()
 class MovieInput {
@@ -51,7 +53,8 @@ export class MovieResolver {
   }
 
   @Query(() => [Movie])
-  movies() {
+  movies(@Info() info: GraphQLResolveInfo) {
+    info.cacheControl.setCacheHint({ maxAge: 120 });
     return Movie.find();
   }
 }
